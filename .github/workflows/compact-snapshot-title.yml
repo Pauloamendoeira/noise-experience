@@ -1,0 +1,38 @@
+name: Compact NOISE Snapshot title
+
+on:
+  push:
+    paths:
+      - '.github/workflows/compact-snapshot-title.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compact Snapshot title
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          old = '.snapshot h1{font-size:28px!important;margin:4px 0 12px!important}'
+          new = '.snapshot h1{font-size:21px!important;line-height:1.05!important;margin:0 0 7px!important}'
+          if old not in s:
+              raise SystemExit('Snapshot title CSS block not found')
+          s = s.replace(old, new, 1)
+          s = s.replace('#snapshot .snapshot-inner>div:first-child{margin-bottom:6px}', '#snapshot .snapshot-inner>div:first-child{margin-bottom:3px}', 1)
+          p.write_text(s, encoding='utf-8')
+          print('Snapshot title compacted')
+          PY
+      - name: Commit and publish source
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Reduce NOISE Snapshot title height"
+          git push
