@@ -1,0 +1,26 @@
+name: Patch NOISE Snapshot
+
+on:
+  push:
+    paths:
+      - 'patch_snapshot.py'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply Snapshot diagnostic layer
+        run: python patch_snapshot.py
+      - name: Commit Snapshot update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "feat: add diagnostic risk layer to NOISE Snapshot"
+            git push
+          fi
