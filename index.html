@@ -174,9 +174,9 @@ header{height:54px!important;min-height:54px!important}
 .brand small{font-size:10px!important}
 
 /* Snapshot remains full-screen, but its content fits without vertical overflow on common desktop sizes */
-.snapshot{overflow:hidden!important;padding:18px!important}
-.snapshot-inner{max-width:1060px!important;height:100%!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
-.snapshot h1{font-size:21px!important;line-height:1.05!important;margin:0 0 7px!important}
+.snapshot{overflow:hidden!important;padding:10px 18px!important}
+.snapshot-inner{max-width:1060px!important;height:100%!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important}
+.snapshot h1{font-size:18px!important;line-height:1.02!important;margin:0 0 5px!important}
 .snap-grid{gap:8px!important}
 .snap{padding:10px!important}
 .snap small{font-size:8px!important}
@@ -198,8 +198,8 @@ header{height:54px!important;min-height:54px!important}
 
 
 <style id="noise-snapshot-compact">
-#snapshot .snapshot-inner{padding-top:14px;padding-bottom:14px}
-#snapshot .snapshot-inner>div:first-child{margin-bottom:3px}
+#snapshot .snapshot-inner{padding-top:4px;padding-bottom:4px}
+#snapshot .snapshot-inner>div:first-child{margin-bottom:1px}
 #snapshot .snapshot-inner h1,#snapshot .snapshot-inner h2{margin-top:0}
 .noise-result-grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(260px,.8fr);gap:10px;align-items:start}
 .noise-result-left,.noise-result-right{display:grid;gap:8px}
@@ -209,7 +209,7 @@ header{height:54px!important;min-height:54px!important}
 .noise-card.primary{border-color:#785055}
 .noise-cost{background:#111a22;border:1px solid #354758;border-radius:10px;padding:10px 11px}
 .noise-provoke{background:#17222d;border:1px solid #273746;border-radius:9px;padding:9px 10px}
-#snapshot .question{margin-top:8px;padding:10px 12px}
+#snapshot .question{margin-top:6px;padding:8px 10px}
 #snapshot .question h3{margin:0 0 4px}
 #snapshot .question p{margin:0 0 8px}
 @media(max-width:900px){.noise-result-grid{grid-template-columns:1fr}.noise-risk-grid{grid-template-columns:1fr 1fr}}
