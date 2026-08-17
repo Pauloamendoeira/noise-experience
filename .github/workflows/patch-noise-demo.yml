@@ -70,3 +70,4 @@ jobs:
             git commit -m "feat: sharpen NOISE executive demo funnel"
             git push
           fi
+# trigger: 2026-08-17
