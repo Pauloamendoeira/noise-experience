@@ -1,0 +1,44 @@
+name: Fix NOISE Snapshot viewport
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-snapshot-viewport.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fit Snapshot in viewport
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          replacements = {
+              '.snapshot{overflow:hidden!important;padding:18px!important}': '.snapshot{overflow:hidden!important;padding:10px 18px!important}',
+              '.snapshot-inner{max-width:1060px!important;height:100%!important;display:flex!important;flex-direction:column!important;justify-content:center!important}': '.snapshot-inner{max-width:1060px!important;height:100%!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important}',
+              '.snapshot h1{font-size:21px!important;line-height:1.05!important;margin:0 0 7px!important}': '.snapshot h1{font-size:18px!important;line-height:1.02!important;margin:0 0 5px!important}',
+              '#snapshot .snapshot-inner{padding-top:14px;padding-bottom:14px}': '#snapshot .snapshot-inner{padding-top:4px;padding-bottom:4px}',
+              '#snapshot .snapshot-inner>div:first-child{margin-bottom:3px}': '#snapshot .snapshot-inner>div:first-child{margin-bottom:1px}',
+              '#snapshot .question{margin-top:8px;padding:10px 12px}': '#snapshot .question{margin-top:6px;padding:8px 10px}'
+          }
+          for old, new in replacements.items():
+              if old not in s:
+                  raise SystemExit('Expected CSS not found: ' + old)
+              s = s.replace(old, new, 1)
+          p.write_text(s, encoding='utf-8')
+          print('Snapshot viewport fit adjusted')
+          PY
+      - name: Commit source
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Fit NOISE Snapshot within viewport"
+          git push
