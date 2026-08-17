@@ -14,53 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Patch snapshot
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p = Path('index.html')
-          s = p.read_text(encoding='utf-8')
-
-          replacements = {
-          '''      <div class="snap"><small>NOISE final</small><b id="snapNoise">0</b></div>
-      <div class="snap"><small>Tempo simulado</small><b id="snapTime">0</b></div>
-      <div class="snap"><small>Patrimônio final</small><b id="snapWorth">R$ 0</b></div>
-      <div class="snap"><small>Custo provável do ruído</small><b id="snapInvisible">R$ 0</b></div>
-      <div class="snap"><small>Recurso de proteção</small><b id="snapStrength">—</b></div>
-      <div class="snap"><small>Principal risco decisório</small><b id="snapRisk">—</b></div>''': '''      <div class="snap"><small>NOISE final</small><b id="snapNoise">0</b></div>
-      <div class="snap"><small>Recurso de proteção</small><b id="snapStrength">—</b></div>
-      <div class="snap"><small>Principal risco decisório</small><b id="snapRisk">—</b></div>''',
-
-          '''<div style="font-size:9.5px;color:#e2e8ed;line-height:1.3;margin-top:3px"><b>Custo provável:</b> ${r.pain}</div>''': '''<div style="font-size:9.5px;color:#e2e8ed;line-height:1.3;margin-top:3px"><b>Pode produzir:</b> ${r.pain}</div>''',
-
-          '''       <div class="noise-cost">
-         <div style="font-size:9px;color:#ffc760;font-weight:900;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">O custo da decisão ruim</div>
-         <div style="font-size:20px;font-weight:900;color:#fff">${fmt(invisibleEstimate)}</div>
-         <div style="font-size:9.5px;color:#b9c7d3;line-height:1.3;margin-top:3px">podem estar sendo consumidos pelo jeito como a empresa decide, não necessariamente pelo mercado.</div>
-       </div>''': '''       <div class="noise-cost">
-         <div style="font-size:9px;color:#ffc760;font-weight:900;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">O que este padrão pode produzir</div>
-         <div style="font-size:11px;font-weight:850;line-height:1.35;color:#f4f7fa">${topRisks[0]?.pain || 'Retrabalho, lentidão decisória e pressão crescente sobre o sistema.'}</div>
-         <div style="font-size:9.5px;color:#b9c7d3;line-height:1.3;margin-top:3px">O efeito aparece na continuidade, na coordenação e na capacidade de responder antes que o ruído vire problema.</div>
-       </div>''',
-
-          ''' document.getElementById("snapNoise").textContent=Math.round(state.noise);
- document.getElementById("snapTime").textContent=`${state.year-2026} anos e ${state.month} meses`;
- document.getElementById("snapWorth").textContent=fmt(state.cash+state.assets-state.debt);
- document.getElementById("snapInvisible").textContent=fmt(invisibleEstimate);
- document.getElementById("snapStrength").textContent=strength;''': ''' document.getElementById("snapNoise").textContent=Math.round(state.noise);
- document.getElementById("snapStrength").textContent=strength;'''
-          }
-
-          changed = 0
-          for old, new in replacements.items():
-              if old not in s:
-                  raise SystemExit('Expected block not found:\n' + old[:180])
-              s = s.replace(old, new, 1)
-              changed += 1
-
-          p.write_text(s, encoding='utf-8')
-          print(f'Applied {changed} snapshot replacements')
-          PY
+      - name: Patch Snapshot
+        run: python scripts/patch_snapshot.py
       - name: Commit changes
         run: |
           git config user.name "github-actions[bot]"
